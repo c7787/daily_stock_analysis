@@ -2669,8 +2669,12 @@ class SystemConfigService:
         blocked_tokens = (
             "your request was blocked",
             "request was blocked",
+            "request has been blocked",
+            "request is blocked",
             "request blocked",
+            "blocked by safety",
             "blocked by policy",
+            "blocked by content",
             "moderation_blocked",
         )
         return any(token in lowered for token in blocked_tokens)

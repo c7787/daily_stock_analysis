@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - [改进] 补齐通知渠道 P0 基线、Actions 映射与 `--check-notify` 只读诊断，完善 AstrBot 配置入口和通知回归快照。
 - [修复] 修正 LLM 渠道测试中 `Model disabled` 被误报为网络异常的问题，并在失败提示中展示本次实际测试模型。
 - [修复] 修正 LLM 渠道测试中 `Your request was blocked` 等上游拦截错误被误报为网络异常的问题。
+- [测试] 补充 LLM 渠道连接测试与模型发现失败分流的回归用例（含 `request_blocked/provider_blocked`、`model_access_denied`、`quota`、`network_error` 的边界），覆盖 `Your request was blocked` 与 `request has been blocked by policy` 等上游拦截信号。
 - [chore] 清理仓库根目录：移除误入库的 `.codex`、`review.md` 跟踪记录，将 smoke 测试入口迁移到 `scripts/`、环境检查脚本迁移为 `scripts/check_env.py`，并将 LiteLLM YAML 示例迁移到 `docs/examples/`。
 - [新功能] Web 设置页新增通知渠道一键测试，支持临时配置、耗时与脱敏 attempts 展示。
 
