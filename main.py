@@ -21,9 +21,11 @@ A股自选股智能分析系统 - 主调度程序
 - 效率优先：关注筹码集中度好的股票
 - 买点偏好：缩量回踩 MA5/MA10 支撑
 """
+from __future__ import annotations
+
 import os
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from dotenv import dotenv_values
 from src.config import setup_env
@@ -47,7 +49,6 @@ import sys
 import time
 import uuid
 from datetime import datetime, timezone, timedelta
-from typing import Any, Callable, List, Tuple
 
 from data_provider.base import canonical_stock_code
 from src.webui_frontend import prepare_webui_frontend_assets
