@@ -157,6 +157,7 @@ class LLMToolAdapter:
         config = config or get_config()
         self._config = config
         self._router = None          # litellm Router (multi-key primary model)
+        self._legacy_router_model_list: List[Dict[str, Any]] = []
         self._litellm_available = False
         self._register_custom_model_pricing()
         self._init_litellm()
@@ -187,6 +188,7 @@ class LLMToolAdapter:
     def _init_litellm(self) -> None:
         """Initialize litellm Router from channels / YAML / legacy keys."""
         config = self._config
+        self._legacy_router_model_list = []
         litellm_model = get_effective_agent_primary_model(config)
         if not litellm_model:
             logger.warning("Agent LLM: no effective primary model configured")
@@ -233,6 +235,7 @@ class LLMToolAdapter:
                 }
                 for k in keys
             ]
+            self._legacy_router_model_list = legacy_model_list
             self._router = Router(
                 model_list=legacy_model_list,
                 routing_strategy="simple-shuffle",
@@ -425,6 +428,9 @@ class LLMToolAdapter:
             bool(use_channel_router and self._router and model in _router_model_names)
             or bool(self._router and model == agent_primary_model and not use_channel_router)
         )
+        recovery_model_list = self._config.llm_model_list
+        if self._router and model == agent_primary_model and not use_channel_router:
+            recovery_model_list = self._legacy_router_model_list or self._config.llm_model_list
         if not uses_router:
             keys = get_api_keys_for_model(model, self._config)
             if keys:
@@ -434,7 +440,7 @@ class LLMToolAdapter:
             call_kwargs,
             model,
             self._get_temperature() if temperature is None else temperature,
-            model_list=self._config.llm_model_list,
+            model_list=recovery_model_list,
         )
         if use_channel_router and self._router and model in _router_model_names:
             # Channel / YAML path: Router manages all models in its model_list
@@ -442,7 +448,7 @@ class LLMToolAdapter:
                 lambda kwargs: self._router.completion(**kwargs),
                 model=model,
                 call_kwargs=call_kwargs,
-                model_list=self._config.llm_model_list,
+                model_list=recovery_model_list,
                 logger=logger,
             )
         elif self._router and model == agent_primary_model and not use_channel_router:
@@ -451,7 +457,7 @@ class LLMToolAdapter:
                 lambda kwargs: self._router.completion(**kwargs),
                 model=model,
                 call_kwargs=call_kwargs,
-                model_list=self._config.llm_model_list,
+                model_list=recovery_model_list,
                 logger=logger,
             )
         else:
