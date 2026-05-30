@@ -13,7 +13,7 @@ For English contributors: please fill in English. All fields marked (EN) accept 
 - [ ] test
 
 > 文档 / 治理类 PR 建议仅勾选 `docs`，使用 `Refs #<issue_number>`（或空）进行 issue 关联。
-> 运行时能力交付类 PR 按实际交付边界选择 `Fixes` / `Closes` 或 `Refs`。
+> 运行时能力交付类 PR 按实际交付边界选择 `Fixes`；文档 / 治理类请避免使用 `Closes`（该关键词会直接关闭 Issue）。
 
 ## Background And Problem
 
@@ -34,7 +34,7 @@ For English contributors: please fill in English. All fields marked (EN) accept 
 - [ ] **类型与边界清晰**：若为 docs/governance-only，请在 PR Type 仅勾选 `docs`，并说明不承诺 runtime 行为交付。
 - [ ] **验收范围正确**：本 PR 的验收项仅覆盖文档/治理边界，不包含运行时行为交付项（含调度、触发时点、解析兼容行为）。
 - [ ] **文档交付清单**：边界说明与现有行为一致、双语文档同步（如涉及），并同步 `docs/CHANGELOG.md`（如涉及用户可见文档）。
-- [ ] **Issue 链接语义正确**：文档/治理说明类 PR 请使用 `Refs #<issue_number>`（或无 issue 说明），避免误用 `Closes` / `Fixes`。
+- [ ] **Issue 链接语义正确**：文档/治理说明类 PR 请使用 `Refs #<issue_number>`（或无 issue 说明），避免误用 `Closes`（文档类默认不应 auto-close）。
 
 
 ## Issue Link
@@ -46,7 +46,7 @@ For English contributors: please fill in English. All fields marked (EN) accept 
 - 无 Issue 时说明原因与验收标准 / If no issue, explain the motivation and acceptance criteria
 
 > 文档/治理类、仅做边界澄清且不含运行时交付的 PR，请使用 `Refs #<issue_number>`（或空）与 `docs`，避免误触发 Issue 自动关闭。
-> For docs/governance-only changes that only clarify boundaries and do not include runtime delivery, use `docs + Refs #<issue_number>` if needed and keep PR type as `docs` only; avoid auto-closing issues with `Fixes` / `Closes`.
+> For docs/governance-only changes that only clarify boundaries and do not include runtime delivery, use `docs + Refs #<issue_number>` if needed and keep PR type as `docs` only; avoid using `Closes` for auto-close.
 
 ## Verification Commands And Results
 
