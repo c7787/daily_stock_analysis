@@ -14,7 +14,8 @@ from typing import Any, Dict
 from unittest.mock import ANY, MagicMock, patch
 import threading
 
-from fastapi import HTTPException
+from fastapi import FastAPI, HTTPException
+from fastapi.testclient import TestClient
 
 try:
     import litellm  # noqa: F401
@@ -414,6 +415,28 @@ class AlphaSiftOpportunitiesApiTestCase(unittest.TestCase):
         self.assertEqual(payload["topic"], "玻璃基板")
         self.assertEqual(payload["route"][0]["title"], "盘中发酵")
         self.assertEqual(payload["stocks"][0]["name"], "戈碧迦")
+
+    def test_hotspot_detail_route_accepts_slash_containing_topic(self) -> None:
+        config = self._config(enabled=True)
+        app = FastAPI()
+        app.include_router(alphasift_endpoint.router, prefix="/api/v1/alphasift")
+        app.dependency_overrides[alphasift_endpoint.get_config_dep] = lambda: config
+        service = MagicMock()
+        service.hotspot_detail.return_value = {
+            "enabled": True,
+            "provider": "akshare",
+            "topic": "DRG/DIP",
+            "route": [],
+            "stocks": [],
+            "stock_count": 0,
+        }
+
+        with patch("api.v1.endpoints.alphasift._service", return_value=service):
+            response = TestClient(app).get("/api/v1/alphasift/hotspots/DRG%2FDIP?provider=akshare")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["topic"], "DRG/DIP")
+        service.hotspot_detail.assert_called_once_with(topic="DRG/DIP", provider="akshare")
 
     def test_hotspot_detail_falls_back_when_ths_constituents_fail(self) -> None:
         import pandas as pd

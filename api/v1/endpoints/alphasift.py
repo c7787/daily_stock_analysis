@@ -92,7 +92,7 @@ def alphasift_hotspots(
     return _service(config).hotspots(provider=provider, top=top, refresh=refresh)
 
 
-@router.get("/hotspots/{topic}")
+@router.get("/hotspots/{topic:path}")
 def alphasift_hotspot_detail(
     topic: str,
     provider: str = Query("", max_length=32),
