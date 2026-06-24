@@ -475,6 +475,13 @@ jobs:
             python main.py $FORCE_RUN_ARG
           fi
       
+      - name: 发布到公众号
+        env:
+          WECHAT_APPID: ${{ secrets.WECHAT_APPID }}
+          WECHAT_APPSECRET: ${{ secrets.WECHAT_APPSECRET }}
+        run: python scripts/publish_wechat.py
+        continue-on-error: true
+
       - name: 上传分析报告
         uses: actions/upload-artifact@v6
         if: always()
